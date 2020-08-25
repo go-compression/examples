@@ -22,6 +22,7 @@ def encode(text, max_sliding_window_size=4096):
 
     search_buffer = [] # Array of integers, representing bytes
     check_characters = [] # Array of integers, representing bytes
+    output = [] # Output array
 
     i = 0
     for char in text_bytes:
@@ -38,11 +39,11 @@ def encode(text, max_sliding_window_size=4096):
 
                 if len(token) > length:
                     # Length of token is greater than the length it represents, so output the character
-                    print(bytes(check_characters).decode(encoding)) # Print the characters
+                    output.extend(check_characters) # Output the characters
                 else:
-                    print(token) # Print our token
+                    output.extend(token.encode(encoding)) # Output our token
             else:
-                print(bytes([char]).decode(encoding)) # Print the character     
+                output.extend(check_characters) # Output the character     
 
             check_characters = []   
         
@@ -52,8 +53,11 @@ def encode(text, max_sliding_window_size=4096):
             search_buffer = search_buffer[1:] # Remove the first element from the search_buffer
         
         i += 1
+    
+    return bytes(output)
 
 
-print(encode("SAM SAM", 1))
-print(encode("LZSS will take over the world!", 256))
-print(encode("It even works with 😀s thanks to UTF-8", 16))
+print(encode("SAM SAM", 1).decode(encoding))
+print(encode("supercalifragilisticexpialidocious supercalifragilisticexpialidocious", 1024).decode(encoding))
+print(encode("LZSS will take over the world!", 256).decode(encoding))
+print(encode("It even works with 😀s thanks to UTF-8", 16).decode(encoding))
